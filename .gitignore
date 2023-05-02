@@ -1,3 +1,10 @@
 
 *.properties
+
+*.properties
 .properties
+*.properties
+.properties*
+.properties
+.vscode
+target
