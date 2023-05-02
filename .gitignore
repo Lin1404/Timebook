@@ -1,6 +1,6 @@
 
-# *.properties
-# .properties*
-# .properties
-# .vscode
-# target
+*.properties
+.properties*
+.properties
+.vscode
+target
