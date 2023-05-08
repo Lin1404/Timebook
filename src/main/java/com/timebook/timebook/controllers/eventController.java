@@ -75,8 +75,8 @@ public class eventController {
 
     static List<event> eventsFilter(String period, String date, String email, eventRepository repository){
         LocalDate selectedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyyMMdd"));
-        LocalDate startDate;
-        LocalDate endDate;
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = LocalDate.now();
 
         switch(period){
             case "weekly":
@@ -94,10 +94,7 @@ public class eventController {
             endDate = selectedDate.plusYears(1).withDayOfYear(1);
             break;
 
-            default: 
-            startDate = LocalDate.now();
-            endDate = LocalDate.now();
-            ;
+            default:;
         }
         LocalDateTime startDateTime = startDate.atStartOfDay().atZone(ZoneOffset.UTC).toLocalDateTime();
         LocalDateTime endDateTime = endDate.atStartOfDay().atZone(ZoneOffset.UTC).toLocalDateTime();
