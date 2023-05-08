@@ -14,7 +14,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +26,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 public class eventController {
-
-    String dateFormat = "yyyyMMdd";
 
     private final eventRepository repository;
 

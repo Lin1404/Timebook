@@ -6,10 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TimebookController {
-
     @RequestMapping("/")
     public String homePage(){
         return "Welcome to Timebook!";
     }
-
 }
