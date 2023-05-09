@@ -1,18 +1,25 @@
 package com.timebook.timebook.events;
 
 import java.util.Objects;
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
 @Entity
 public class event {
-    private @Id @GeneratedValue long id;
+    @Id @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private long id;
     private String email;
     private String title;
     private String description;
-    private String startDateTime;
-    private String endDateTime;
+    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    private LocalDateTime startDateTime;
+    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    private LocalDateTime endDateTime;
     private int priority;
 
     event(){}
@@ -22,8 +29,8 @@ public class event {
         String email, 
         String title, 
         String description, 
-        String startDateTime,
-        String endDateTime,
+        LocalDateTime startDateTime,
+        LocalDateTime endDateTime,
         int priority
         ){
             this.id = id;
@@ -35,7 +42,7 @@ public class event {
             this.priority = priority;
         }
 
-        public Long getId(){
+        public long getId(){
             return this.id;
         }
 
@@ -51,11 +58,11 @@ public class event {
             return this.description;
         }
 
-        public String getStartDateTime(){
+        public LocalDateTime getStartDateTime(){
             return this.startDateTime;
         }
 
-        public String getEndDateTime(){
+        public LocalDateTime getEndDateTime(){
             return this.endDateTime;
         }
 
@@ -63,7 +70,7 @@ public class event {
             return this.priority;
         }
 
-        public void setId(Long id){
+        public void setId(long id){
             this.id = id;
         }
 
@@ -79,11 +86,11 @@ public class event {
             this.description = description;
         }
 
-        public void setStartDateTime(String startDateTime){
+        public void setStartDateTime(LocalDateTime startDateTime){
             this.startDateTime = startDateTime;
         }
 
-        public void setEndDateTime(String endDateTime){
+        public void setEndDateTime(LocalDateTime endDateTime){
             this.endDateTime = endDateTime;
         }   
 
