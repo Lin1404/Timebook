@@ -61,15 +61,15 @@ public class JwtConfiguration {
         return userNameField;
     }
 
-    public String getUserEmailField(){
+    public void setUserNameField(String userNameField) {
+        this.userNameField = userNameField;
+    }
+
+    public String getUserEmailField() {
         return userEmailField;
     }
 
-    public void setUserEmailField(String userEmailField) {
-        this.userEmailField = userEmailField;
-    }
-
-    public void setUserNameField(String userNameField) {
+    public void setUserEmailField(String userNameField) {
         this.userNameField = userNameField;
     }
 

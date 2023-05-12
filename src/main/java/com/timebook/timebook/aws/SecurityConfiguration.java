@@ -26,6 +26,7 @@ public class SecurityConfiguration {
                 //.anyRequest().authenticated()
                 .and()
                 .addFilterBefore(awsCognitoJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.cors(withDefaults());
         return http.build();
     }
 }
