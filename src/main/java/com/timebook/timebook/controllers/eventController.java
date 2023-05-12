@@ -1,5 +1,6 @@
 package com.timebook.timebook.controllers;
 
+import com.timebook.timebook.models.UserData;
 import com.timebook.timebook.events.event;
 import com.timebook.timebook.events.eventRepository;
 
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin
 @RestController
 public class eventController {
 
@@ -110,20 +112,22 @@ public class eventController {
     }
 
     //Get weekly events by user's email 
-    @RequestMapping(value = "/v1/calendar/week/{date}/{email}", method = RequestMethod.GET)
-    public List<event> weekly(@PathVariable ("date") String date, @PathVariable ("email") String email){
-        return eventsFilter("weekly", date, email, repository);
+    @RequestMapping(value = "/v1/calendar/week/{date}", method = RequestMethod.GET)
+    public List<event> weekly(@PathVariable ("date") String date, Authentication authentication){
+        UserData userInfo = (UserData)authentication.getPrincipal();
+        return eventsFilter("weekly", date, userInfo.getEmail(), repository); 
     }
-
     //Get monthly events by user's email     
-    @RequestMapping(value = "/v1/calendar/month/{date}/{email}", method = RequestMethod.GET)
-    public List<event> monthly(@PathVariable ("date") String date, @PathVariable ("email") String email){
-        return eventsFilter("monthly", date, email, repository);
+    @RequestMapping(value = "/v1/calendar/month/{date}", method = RequestMethod.GET)
+    public List<event> monthly(@PathVariable ("date") String date, Authentication authentication){
+        UserData userInfo = (UserData)authentication.getPrincipal();
+        return eventsFilter("monthly", date, userInfo.getEmail(), repository);
     }
 
     //Get annually events by user's email 
-    @RequestMapping(value = "/v1/calendar/annual/{date}/{email}", method = RequestMethod.GET)
-    public List<event> annually(@PathVariable ("date") String date, @PathVariable ("email") String email){
-        return eventsFilter("annually", date, email, repository);
+    @RequestMapping(value = "/v1/calendar/annual/{date}", method = RequestMethod.GET)
+    public List<event> annually(@PathVariable ("date") String date, Authentication authentication){
+        UserData userInfo = (UserData)authentication.getPrincipal();
+        return eventsFilter("annually", date, userInfo.getEmail(), repository);
     }
 }
