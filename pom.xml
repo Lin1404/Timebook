@@ -20,12 +20,6 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>2.1.214</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.springframework.security</groupId>
     		<artifactId>spring-security-oauth2-client</artifactId>
 		</dependency>
@@ -58,7 +52,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+      		<artifactId>spring-boot-starter-security</artifactId>
+   		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -76,6 +73,11 @@
         	<artifactId>spring-data-dynamodb</artifactId>
         	<version>5.1.0</version>
     	</dependency>
+		<dependency>
+    		<groupId>com.nimbusds</groupId>
+    		<artifactId>nimbus-jose-jwt</artifactId>
+    		<version>9.31</version>
+		</dependency>
 	</dependencies>
 
 	<build>
