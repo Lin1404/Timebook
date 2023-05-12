@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
+import com.timebook.timebook.models.UserData;
 
 @Component
 public class AwsCognitoIdTokenProcessor {
@@ -31,9 +32,10 @@ public class AwsCognitoIdTokenProcessor {
             validateIssuer(claims);
             verifyIfIdToken(claims);
             String username = getUserNameFrom(claims);
+            String userEmail = getUserEmailFrom(claims);
             if (username != null) {
                 List<GrantedAuthority> grantedAuthorities = of( new SimpleGrantedAuthority("ROLE_ADMIN"));
-                User user = new User(username, "", of());
+                UserData user = new UserData(username, userEmail,"", of());
                 return new JwtAuthentication(user, claims, grantedAuthorities);
             }
         }
@@ -42,6 +44,10 @@ public class AwsCognitoIdTokenProcessor {
 
     private String getUserNameFrom(JWTClaimsSet claims) {
         return claims.getClaims().get(this.jwtConfiguration.getUserNameField()).toString();
+    }
+
+    private String getUserEmailFrom(JWTClaimsSet claims){
+        return claims.getClaims().get(this.jwtConfiguration.getUserEmailField()).toString();
     }
 
     private void verifyIfIdToken(JWTClaimsSet claims) throws Exception {

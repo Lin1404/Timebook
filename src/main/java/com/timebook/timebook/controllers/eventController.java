@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin
 @RestController
 public class eventController {
 

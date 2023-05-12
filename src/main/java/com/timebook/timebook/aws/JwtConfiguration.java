@@ -13,6 +13,7 @@ public class JwtConfiguration {
     private String jwkUrl;
     private String region = "us-east-1";
     private String userNameField = "cognito:username";
+    private String userEmailField = "email";
     private int connectionTimeout = 2000;
     private int readTimeout = 2000;
     private String httpHeader = "Authorization";
@@ -58,6 +59,14 @@ public class JwtConfiguration {
 
     public String getUserNameField() {
         return userNameField;
+    }
+
+    public String getUserEmailField(){
+        return userEmailField;
+    }
+
+    public void setUserEmailField(String userEmailField) {
+        this.userEmailField = userEmailField;
     }
 
     public void setUserNameField(String userNameField) {

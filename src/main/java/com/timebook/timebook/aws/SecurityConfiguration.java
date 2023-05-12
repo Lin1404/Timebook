@@ -18,6 +18,7 @@ public class SecurityConfiguration {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.headers(headers -> headers.cacheControl());
+        http.cors(withDefaults());
         http.csrf(withDefaults())
                 .authorizeHttpRequests()
                 //.requestMatchers("**/health").permitAll()
