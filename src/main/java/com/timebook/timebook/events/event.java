@@ -22,7 +22,7 @@ public class event {
     private LocalDateTime endDateTime;
     private int priority;
 
-    event(){}
+    public event(){}
 
     event(
         long id, 

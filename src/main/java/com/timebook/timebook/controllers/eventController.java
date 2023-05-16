@@ -47,8 +47,16 @@ public class eventController {
     
     //Adding an new event
     @PostMapping(value="v1/events")
-    public event newEvent(@RequestBody event newEvent) {
-        return repository.save(newEvent);
+    public event newEvent(@RequestBody event newEvent, Authentication authentication) {
+        UserData userInfo = (UserData)authentication.getPrincipal();
+        event eventToSave = new event();
+        eventToSave.setEmail(userInfo.getEmail());
+        eventToSave.setTitle(newEvent.getTitle());
+        eventToSave.setDescription(newEvent.getDescription());
+        eventToSave.setStartDateTime(newEvent.getStartDateTime());
+        eventToSave.setEndDateTime(newEvent.getEndDateTime());
+        eventToSave.setPriority(newEvent.getPriority());
+        return repository.save(eventToSave);
     }
     
     //Updating an event
