@@ -35,20 +35,20 @@ public class eventController {
 
     private final eventRepository repository;
 
-    public eventController(eventRepository repository){
+    public eventController(eventRepository repository) {
         this.repository = repository;
     }
 
-    //List all the events
+    // List all the events
     @GetMapping(value = "v1/events")
-    public List<event> all (){
+    public List<event> all() {
         return repository.findAll();
     }
-    
-    //Adding an new event
-    @PostMapping(value="v1/events")
+
+    // Adding an new event
+    @PostMapping(value = "v1/events")
     public event newEvent(@RequestBody event newEvent, Authentication authentication) {
-        UserData userInfo = (UserData)authentication.getPrincipal();
+        UserData userInfo = (UserData) authentication.getPrincipal();
         event eventToSave = new event();
         eventToSave.setEmail(userInfo.getEmail());
         eventToSave.setTitle(newEvent.getTitle());
@@ -58,84 +58,86 @@ public class eventController {
         eventToSave.setPriority(newEvent.getPriority());
         return repository.save(eventToSave);
     }
-    
-    //Updating an event
-    @PutMapping(value="v1/events/{id}")
-    public event updatedEvent(@RequestBody event newEvent, @PathVariable long id){
+
+    // Updating an event
+    @PutMapping(value = "v1/events/{id}")
+    public event updatedEvent(@RequestBody event newEvent, @PathVariable long id) {
         return repository.findById(id)
-        .map(event -> {
-            event.setEmail(newEvent.getEmail());
-            event.setTitle(newEvent.getTitle());
-            event.setDescription(newEvent.getDescription());
-            event.setStartDateTime(newEvent.getStartDateTime());
-            event.setEndDateTime(newEvent.getEndDateTime());
-            event.setPriority(newEvent.getPriority());
-            return repository.save(event);
-        }
-        ).orElseGet(()->{
-            newEvent.setId(id);
-            return repository.save(newEvent);
-        });
+                .map(event -> {
+                    event.setEmail(newEvent.getEmail());
+                    event.setTitle(newEvent.getTitle());
+                    event.setDescription(newEvent.getDescription());
+                    event.setStartDateTime(newEvent.getStartDateTime());
+                    event.setEndDateTime(newEvent.getEndDateTime());
+                    event.setPriority(newEvent.getPriority());
+                    return repository.save(event);
+                }).orElseGet(() -> {
+                    newEvent.setId(id);
+                    return repository.save(newEvent);
+                });
     }
 
-    //Deleting an event
+    // Deleting an event
     @DeleteMapping("v1/events/{id}")
-    public void deleteEvent(@PathVariable long id){
+    public void deleteEvent(@PathVariable long id) {
         repository.deleteById(id);
     }
 
-    static List<event> eventsFilter(String period, String date, String email, eventRepository repository){
-        LocalDate selectedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyyMMdd"));
+    static List<event> eventsFilter(String period, String date, String email, eventRepository repository) {
+        LocalDate selectedDate = LocalDate.parse(date);
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = LocalDate.now();
         TemporalField fieldUS = WeekFields.of(Locale.US).dayOfWeek();
 
-        switch(period){
+        switch (period) {
             case "weekly":
-            startDate = selectedDate.with(fieldUS, 1);
-            endDate = startDate.plusDays(7);
-            break;
+                startDate = selectedDate.with(fieldUS, 1);
+                endDate = startDate.plusDays(7);
+                break;
 
             case "monthly":
-            startDate = selectedDate.withDayOfMonth(1);
-            endDate = selectedDate.plusMonths(1).withDayOfMonth(1);
-            break;
+                startDate = selectedDate.withDayOfMonth(1);
+                endDate = selectedDate.plusMonths(1).withDayOfMonth(1);
+                break;
 
             case "annually":
-            startDate = selectedDate.withDayOfYear(1);
-            endDate = selectedDate.plusYears(1).withDayOfYear(1);
-            break;
+                startDate = selectedDate.withDayOfYear(1);
+                endDate = selectedDate.plusYears(1).withDayOfYear(1);
+                break;
 
-            default:;
+            default:
+                break;
         }
         LocalDateTime startDateTime = startDate.atStartOfDay().atZone(ZoneOffset.UTC).toLocalDateTime();
         LocalDateTime endDateTime = endDate.atStartOfDay().atZone(ZoneOffset.UTC).toLocalDateTime();
 
-        Predicate<event> datefilter = e -> 
-            (Timestamp.valueOf(e.getEndDateTime()).toLocalDateTime().isBefore(startDateTime)
-            || Timestamp.valueOf(e.getStartDateTime()).toLocalDateTime().isAfter(endDateTime))
-            ? false : true;
+        Predicate<event> datefilter = e -> (Timestamp.valueOf(e.getEndDateTime()).toLocalDateTime()
+                .isBefore(startDateTime)
+                || Timestamp.valueOf(e.getStartDateTime()).toLocalDateTime().isAfter(endDateTime))
+                        ? false
+                        : true;
 
         return repository.findAllByEmail(email).stream().filter(datefilter).collect(Collectors.toList());
     }
 
-    //Get weekly events by user's email 
+    // Get weekly events by user's email
     @RequestMapping(value = "/v1/calendar/week/{date}", method = RequestMethod.GET)
-    public List<event> weekly(@PathVariable ("date") String date, Authentication authentication){
-        UserData userInfo = (UserData)authentication.getPrincipal();
-        return eventsFilter("weekly", date, userInfo.getEmail(), repository); 
+    public List<event> weekly(@PathVariable("date") String date, Authentication authentication) {
+        UserData userInfo = (UserData) authentication.getPrincipal();
+        return eventsFilter("weekly", date, userInfo.getEmail(), repository);
     }
-    //Get monthly events by user's email     
+
+    // Get monthly events by user's email
     @RequestMapping(value = "/v1/calendar/month/{date}", method = RequestMethod.GET)
-    public List<event> monthly(@PathVariable ("date") String date, Authentication authentication){
-        UserData userInfo = (UserData)authentication.getPrincipal();
+    public List<event> monthly(@PathVariable("date") String date, Authentication authentication) {
+        UserData userInfo = (UserData) authentication.getPrincipal();
         return eventsFilter("monthly", date, userInfo.getEmail(), repository);
     }
 
-    //Get annually events by user's email 
+    // Get annually events by user's email
     @RequestMapping(value = "/v1/calendar/annual/{date}", method = RequestMethod.GET)
-    public List<event> annually(@PathVariable ("date") String date, Authentication authentication){
-        UserData userInfo = (UserData)authentication.getPrincipal();
+    public List<event> annually(@PathVariable("date") String date, Authentication authentication) {
+        UserData userInfo = (UserData) authentication.getPrincipal();
         return eventsFilter("annually", date, userInfo.getEmail(), repository);
     }
 }
