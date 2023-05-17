@@ -84,7 +84,7 @@ public class eventController {
     }
 
     static List<event> eventsFilter(String period, String date, String email, eventRepository repository) {
-        LocalDate selectedDate = LocalDate.parse(date);
+        LocalDate selectedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = LocalDate.now();
         TemporalField fieldUS = WeekFields.of(Locale.US).dayOfWeek();
