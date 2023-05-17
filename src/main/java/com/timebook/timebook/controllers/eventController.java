@@ -1,6 +1,9 @@
 package com.timebook.timebook.controllers;
 
 import com.timebook.timebook.models.UserData;
+
+import jakarta.validation.constraints.Null;
+
 import com.timebook.timebook.events.event;
 import com.timebook.timebook.events.eventRepository;
 
@@ -24,7 +27,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,26 +47,13 @@ public class eventController {
         return repository.findAll();
     }
     
-    //Adding an new event
+    // Add / Update event
     @PostMapping(value="v1/events")
     public event newEvent(@RequestBody event newEvent, Authentication authentication) {
         UserData userInfo = (UserData)authentication.getPrincipal();
-        event eventToSave = new event();
-        eventToSave.setEmail(userInfo.getEmail());
-        eventToSave.setTitle(newEvent.getTitle());
-        eventToSave.setDescription(newEvent.getDescription());
-        eventToSave.setStartDateTime(newEvent.getStartDateTime());
-        eventToSave.setEndDateTime(newEvent.getEndDateTime());
-        eventToSave.setPriority(newEvent.getPriority());
-        return repository.save(eventToSave);
-    }
-    
-    //Updating an event
-    @PutMapping(value="v1/events/{id}")
-    public event updatedEvent(@RequestBody event newEvent, @PathVariable long id){
-        return repository.findById(id)
+        return repository.findById(newEvent.getId())
         .map(event -> {
-            event.setEmail(newEvent.getEmail());
+            event.setEmail(userInfo.getEmail());
             event.setTitle(newEvent.getTitle());
             event.setDescription(newEvent.getDescription());
             event.setStartDateTime(newEvent.getStartDateTime());
@@ -73,8 +62,14 @@ public class eventController {
             return repository.save(event);
         }
         ).orElseGet(()->{
-            newEvent.setId(id);
-            return repository.save(newEvent);
+            event eventToSave = new event();
+            eventToSave.setEmail(userInfo.getEmail());
+            eventToSave.setTitle(newEvent.getTitle());
+            eventToSave.setDescription(newEvent.getDescription());
+            eventToSave.setStartDateTime(newEvent.getStartDateTime());
+            eventToSave.setEndDateTime(newEvent.getEndDateTime());
+            eventToSave.setPriority(newEvent.getPriority());
+            return repository.save(eventToSave);
         });
     }
 

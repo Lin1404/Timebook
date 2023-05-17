@@ -19,7 +19,6 @@ public class SecurityConfiguration {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.headers(headers -> headers.cacheControl());
         http.cors(withDefaults());
-        // Disabled csrf
         http.csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests()
                 //.requestMatchers("**/health").permitAll()
@@ -27,7 +26,6 @@ public class SecurityConfiguration {
                 //.anyRequest().authenticated()
                 .and()
                 .addFilterBefore(awsCognitoJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        http.cors(withDefaults());
         return http.build();
     }
 }
