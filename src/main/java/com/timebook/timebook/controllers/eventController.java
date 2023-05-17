@@ -2,8 +2,6 @@ package com.timebook.timebook.controllers;
 
 import com.timebook.timebook.models.UserData;
 
-import jakarta.validation.constraints.Null;
-
 import com.timebook.timebook.events.event;
 import com.timebook.timebook.events.eventRepository;
 
