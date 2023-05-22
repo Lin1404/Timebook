@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,12 +36,6 @@ public class eventController {
 
     public eventController(eventRepository repository) {
         this.repository = repository;
-    }
-
-    // List all the events
-    @GetMapping(value = "v1/events")
-    public List<event> all() {
-        return repository.findAll();
     }
     
     // Add / Update event
@@ -67,17 +60,17 @@ public class eventController {
         TemporalField fieldUS = WeekFields.of(Locale.US).dayOfWeek();
 
         switch (period) {
-            case "weekly":
+            case "week":
                 startDate = selectedDate.with(fieldUS, 1);
                 endDate = startDate.plusDays(7);
                 break;
 
-            case "monthly":
+            case "month":
                 startDate = selectedDate.withDayOfMonth(1);
                 endDate = selectedDate.plusMonths(1).withDayOfMonth(1);
                 break;
 
-            case "annually":
+            case "annual":
                 startDate = selectedDate.withDayOfYear(1);
                 endDate = selectedDate.plusYears(1).withDayOfYear(1);
                 break;
@@ -101,20 +94,20 @@ public class eventController {
     @RequestMapping(value = "/v1/calendar/week/{date}", method = RequestMethod.GET)
     public List<event> weekly(@PathVariable("date") String date, Authentication authentication) {
         UserData userInfo = (UserData) authentication.getPrincipal();
-        return eventsFilter("weekly", date, userInfo.getEmail(), repository);
+        return eventsFilter("week", date, userInfo.getEmail(), repository);
     }
 
     // Get monthly events by user's email
     @RequestMapping(value = "/v1/calendar/month/{date}", method = RequestMethod.GET)
     public List<event> monthly(@PathVariable("date") String date, Authentication authentication) {
         UserData userInfo = (UserData) authentication.getPrincipal();
-        return eventsFilter("monthly", date, userInfo.getEmail(), repository);
+        return eventsFilter("month", date, userInfo.getEmail(), repository);
     }
 
     // Get annually events by user's email
     @RequestMapping(value = "/v1/calendar/annual/{date}", method = RequestMethod.GET)
     public List<event> annually(@PathVariable("date") String date, Authentication authentication) {
         UserData userInfo = (UserData) authentication.getPrincipal();
-        return eventsFilter("annually", date, userInfo.getEmail(), repository);
+        return eventsFilter("annual", date, userInfo.getEmail(), repository);
     }
 }
