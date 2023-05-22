@@ -55,8 +55,9 @@ public class eventController {
 
     // Deleting an event
     @DeleteMapping("v1/events/{id}")
-    public void deleteEvent(@PathVariable long id) {
+    public long deleteEvent(@PathVariable long id) {
         repository.deleteById(id);
+        return id;
     }
 
     static List<event> eventsFilter(String period, String date, String email, eventRepository repository) {
