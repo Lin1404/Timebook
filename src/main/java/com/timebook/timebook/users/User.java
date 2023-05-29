@@ -1,15 +1,21 @@
 package com.timebook.timebook.users;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import net.minidev.json.JSONObject;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
 @Entity
-public class User {
+@Table(name = "users")
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -17,9 +23,11 @@ public class User {
     private String email;
     private String firstName;
     private String lastName;
-    private List subscriber;
-    private List subscribed;
-    private Object metadata;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<User> subscriber;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<User> subscribed;
+    private JSONObject metadata;
 
     User(
             long id,
@@ -27,9 +35,9 @@ public class User {
             String email,
             String firstName,
             String lastName,
-            List subscriber,
-            List subscribed,
-            Object metadata) {
+            List<User> subscriber,
+            List<User> subscribed,
+            JSONObject metadata) {
         this.id = id;
         this.cognitoId = cognitoId;
         this.email = email;
@@ -60,15 +68,15 @@ public class User {
         return this.lastName;
     }
 
-    public List getSubscriber() {
+    public List<User> getSubscriber() {
         return this.subscriber;
     }
 
-    public List getSubscribed() {
+    public List<User> getSubscribed() {
         return this.subscribed;
     }
 
-    public Object getMetadata() {
+    public JSONObject getMetadata() {
         return this.metadata;
     }
 
@@ -92,15 +100,15 @@ public class User {
         this.lastName = lastName;
     }
 
-    public void setSubscriber(List subscriber) {
+    public void setSubscriber(List<User> subscriber) {
         this.subscriber = subscriber;
     }
 
-    public void setSubscribed(List subscribed) {
+    public void setSubscribed(List<User> subscribed) {
         this.subscribed = subscribed;
     }
 
-    public void setMetadata(Object metadata) {
+    public void setMetadata(JSONObject metadata) {
         this.metadata = metadata;
     }
 
@@ -146,6 +154,7 @@ public class User {
                 ", lastName='" + this.lastName +
                 ", subscriber='" + this.subscriber +
                 ", subscribed='" + this.subscribed +
-                ", metadata='" + this.metadata + '}';
+                ", metadata='" + this.metadata +
+                '}';
     }
 }
