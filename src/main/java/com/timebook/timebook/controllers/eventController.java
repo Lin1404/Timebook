@@ -51,7 +51,7 @@ public class eventController {
     // Add / Update event
     @PostMapping(value="v1/events")
     public event saveEvent(@RequestBody event requestEvent, Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        UserData user = (UserData) authentication.getPrincipal();
         requestEvent.setEmail(user.getEmail());
         return eventRepository.save(requestEvent);
     }
