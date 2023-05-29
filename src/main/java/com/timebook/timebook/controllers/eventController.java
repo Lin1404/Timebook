@@ -64,7 +64,7 @@ public class eventController {
     }
 
     @Async
-    public void saveUser(UserData user) {
+    private void saveUser(UserData user) {
         try {
             User userFound = userRepository.findByEmail(user.getEmail());
             if (userFound == null) {
@@ -74,7 +74,7 @@ public class eventController {
                 userRepository.save(userToSave);
             }
         } catch (Exception e) {
-            logger.error(e);
+            logger.error(e.getMessage());
         }
     }
 
@@ -127,6 +127,7 @@ public class eventController {
     @RequestMapping(value = "/v1/calendar/month/{date}", method = RequestMethod.GET)
     public List<event> monthly(@PathVariable("date") String date, Authentication authentication) {
         UserData user = (UserData) authentication.getPrincipal();
+        saveUser(user);
         return eventsFilter("month", date, user, eventRepository);
     }
 
@@ -134,6 +135,7 @@ public class eventController {
     @RequestMapping(value = "/v1/calendar/annual/{date}", method = RequestMethod.GET)
     public List<event> annually(@PathVariable("date") String date, Authentication authentication) {
         UserData user = (UserData) authentication.getPrincipal();
+        saveUser(user);
         return eventsFilter("annual", date, user, eventRepository);
     }
 }
