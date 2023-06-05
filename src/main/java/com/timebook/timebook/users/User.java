@@ -7,6 +7,7 @@ import java.util.Objects;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import net.minidev.json.JSONObject;
@@ -21,9 +22,9 @@ public class User implements Serializable {
     private long id;
     private String cognitoId;
     private String email;
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<User> subscriber;
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<User> subscribed;
     private JSONObject metadata;
 
