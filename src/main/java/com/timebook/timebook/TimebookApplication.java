@@ -7,6 +7,7 @@ import static com.nimbusds.jose.JWSAlgorithm.RS256;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
@@ -21,6 +22,7 @@ import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 import com.timebook.timebook.aws.JwtConfiguration;
 
 @SpringBootApplication
+@EnableAutoConfiguration
 public class TimebookApplication {
 
 	@Autowired 
