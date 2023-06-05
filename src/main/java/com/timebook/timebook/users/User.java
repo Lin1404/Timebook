@@ -27,6 +27,7 @@ public class User implements Serializable {
     private List<User> subscriber;
     @OneToMany(fetch = FetchType.LAZY)
     private List<User> subscribed;
+    // Need to change metadata type in the future
     private JSONObject metadata;
 
     User(
