@@ -3,6 +3,8 @@ package com.timebook.timebook.users;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -123,13 +125,13 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "event{" +
+        return "User{" +
                 "id=" + this.id +
                 ", cognitoId='" + this.cognitoId + '\'' +
                 ", email='" + this.email + '\'' +
-                ", subscribers='" + this.subscribers +
-                ", subscriptions='" + this.subscriptions +
-                ", metadata='" + this.metadata +
+                ", subscribers='" + this.subscribers.stream().map(User::getEmail).collect(Collectors.toList()) +
+                ", subscriptions='" + this.subscriptions.stream().map(User::getEmail).collect(Collectors.toList()) +
+                // ", metadata='" + this.metadata +
                 '}';
     }
 }

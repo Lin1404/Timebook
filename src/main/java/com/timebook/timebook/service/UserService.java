@@ -16,18 +16,21 @@ public class UserService {
 
     // Add subscribed
     public void createSubscription(String subscribeToEmail, String subscribeFromEmail) {
-        User toUser = userRepository.findByEmail(subscribeToEmail);
         User fromUser = userRepository.findByEmail(subscribeFromEmail);
-        fromUser.getSubscriptions().add(toUser);
-        toUser.getSubscribers().add(fromUser);
+        User toUser = userRepository.findByEmail(subscribeToEmail);
 
-        userRepository.save(fromUser);
-        userRepository.save(toUser);
+        if(!fromUser.getSubscriptions().contains(toUser)){
+            fromUser.getSubscriptions().add(toUser);
+            toUser.getSubscribers().add(fromUser);
+    
+            userRepository.save(fromUser);
+            userRepository.save(toUser);
+        }
     }
 
-    public User printUser(String userEmail) {
+    public String printUser(String userEmail) {
         User targetUser = userRepository.findByEmail(userEmail);
-        return targetUser;
+        return targetUser.toString();
     }
 
 }
