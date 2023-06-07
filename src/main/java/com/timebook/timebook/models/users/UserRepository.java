@@ -1,4 +1,4 @@
-package com.timebook.timebook.users;
+package com.timebook.timebook.models.users;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

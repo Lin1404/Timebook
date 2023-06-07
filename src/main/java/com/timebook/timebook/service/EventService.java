@@ -1,8 +1,8 @@
 package com.timebook.timebook.service;
 
-import com.timebook.timebook.events.Event;
-import com.timebook.timebook.events.EventRepository;
 import com.timebook.timebook.models.UserData;
+import com.timebook.timebook.models.events.Event;
+import com.timebook.timebook.models.events.EventRepository;
 
 import java.util.List;
 import java.util.Locale;
@@ -36,7 +36,7 @@ public class EventService {
         eventRepository.deleteById(id);
     }
 
-    List<Event> eventsFilter(String period, String date, UserData user) {
+    public List<Event> eventsFilter(String period, String date, UserData user) {
         LocalDate selectedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = LocalDate.now();

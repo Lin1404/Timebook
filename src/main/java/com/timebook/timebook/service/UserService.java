@@ -3,8 +3,8 @@ package com.timebook.timebook.service;
 
 import com.timebook.timebook.controllers.EventController;
 import com.timebook.timebook.models.UserData;
-import com.timebook.timebook.users.User;
-import com.timebook.timebook.users.UserRepository;
+import com.timebook.timebook.models.users.User;
+import com.timebook.timebook.models.users.UserRepository;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
