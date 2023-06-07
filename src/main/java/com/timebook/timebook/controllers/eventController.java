@@ -5,7 +5,7 @@ import com.timebook.timebook.models.events.Event;
 import com.timebook.timebook.service.EventService;
 import com.timebook.timebook.service.UserService;
 
-import java.util.List;
+import net.minidev.json.JSONObject;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -48,25 +48,25 @@ public class EventController {
 
     // Get weekly events by user's email
     @RequestMapping(value = "/v1/calendar/week/{date}", method = RequestMethod.GET)
-    public List<Event> weekly(@PathVariable("date") String date, Authentication authentication) {
+    public JSONObject weekly(@PathVariable("date") String date, Authentication authentication) {
         UserData user = (UserData) authentication.getPrincipal();
         userService.saveUser(user);
-        return eventService.eventsFilter("week", date, user);
+        return eventService.getEventsWithSubscription("week", date, user.getEmail());
     }
 
     // Get monthly events by user's email
     @RequestMapping(value = "/v1/calendar/month/{date}", method = RequestMethod.GET)
-    public List<Event> monthly(@PathVariable("date") String date, Authentication authentication) {
+    public JSONObject monthly(@PathVariable("date") String date, Authentication authentication) {
         UserData user = (UserData) authentication.getPrincipal();
         userService.saveUser(user);
-        return eventService.eventsFilter("month", date, user);
+        return eventService.getEventsWithSubscription("month", date, user.getEmail());
     }
 
     // Get annually events by user's email
     @RequestMapping(value = "/v1/calendar/annual/{date}", method = RequestMethod.GET)
-    public List<Event> annually(@PathVariable("date") String date, Authentication authentication) {
+    public JSONObject annually(@PathVariable("date") String date, Authentication authentication) {
         UserData user = (UserData) authentication.getPrincipal();
         userService.saveUser(user);
-        return eventService.eventsFilter("annual", date, user);
+        return eventService.getEventsWithSubscription("annual", date, user.getEmail());
     }
 }

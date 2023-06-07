@@ -1,8 +1,10 @@
 package com.timebook.timebook.service;
 
-import com.timebook.timebook.models.UserData;
 import com.timebook.timebook.models.events.Event;
 import com.timebook.timebook.models.events.EventRepository;
+import com.timebook.timebook.models.users.User;
+
+import net.minidev.json.JSONObject;
 
 import java.util.List;
 import java.util.Locale;
@@ -21,11 +23,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EventService {
-
+    private final UserService userService;
     private final EventRepository eventRepository;
 
-    public EventService(EventRepository eventRepository) {
+    public EventService(EventRepository eventRepository, UserService userService) {
         this.eventRepository = eventRepository;
+        this.userService = userService;
     }
 
     public Event post(Event requestEvent) {
@@ -36,7 +39,7 @@ public class EventService {
         eventRepository.deleteById(id);
     }
 
-    public List<Event> eventsFilter(String period, String date, UserData user) {
+    public Predicate<Event> datefilter(String period, String date) {
         LocalDate selectedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = LocalDate.now();
@@ -64,12 +67,34 @@ public class EventService {
         LocalDateTime startDateTime = startDate.atStartOfDay().atZone(ZoneOffset.UTC).toLocalDateTime();
         LocalDateTime endDateTime = endDate.atStartOfDay().atZone(ZoneOffset.UTC).toLocalDateTime();
 
-        Predicate<Event> datefilter = e -> (Timestamp.valueOf(e.getEndDateTime()).toLocalDateTime()
+        Predicate<Event> datefilter = e -> !((Timestamp.valueOf(e.getEndDateTime()).toLocalDateTime()
                 .isBefore(startDateTime)
-                || Timestamp.valueOf(e.getStartDateTime()).toLocalDateTime().isAfter(endDateTime))
-                        ? false
-                        : true;
+                || Timestamp.valueOf(e.getStartDateTime()).toLocalDateTime().isAfter(endDateTime)));
 
-        return eventRepository.findAllByEmail(user.getEmail()).stream().filter(datefilter).collect(Collectors.toList());
+        return datefilter;
+    }
+
+    public JSONObject getEventsWithSubscription(String period, String date, String userEmail) {
+        User fromUser = userService.findUserByEmail(userEmail);
+        List<String> subscritionList = fromUser.getSubscriptions().stream().map(User::getEmail)
+                .collect(Collectors.toList());
+
+        JSONObject result = new JSONObject();
+        JSONObject subscription = new JSONObject();
+
+        Predicate<Event> datefilter = this.datefilter(period, date);
+        List<Event> userEvents = eventRepository.findAllByEmail(userEmail).stream().filter(datefilter)
+                .collect(Collectors.toList());
+        for (int i = 0; i < subscritionList.size(); i++) {
+            String tragetEmail = subscritionList.get(i);
+            List<Event> subEvents = eventRepository.findAllByEmail(tragetEmail).stream().filter(datefilter)
+                    .collect(Collectors.toList());
+            subscription.put(tragetEmail, subEvents);
+        }
+
+        result.put(userEmail, userEvents);
+        result.put("Subscription", subscription);
+
+        return result;
     }
 }
