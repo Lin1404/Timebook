@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface eventRepository extends JpaRepository<event, Long>{
+public interface EventRepository extends JpaRepository<Event, Long> {
     
-    public List<event> findAllByEmail(String email);
+    public List<Event> findAllByEmail(String email);
 
 }

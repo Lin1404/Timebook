@@ -10,7 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
 @Entity
-public class event {
+public class Event {
     @Id @GeneratedValue (strategy = GenerationType.IDENTITY)
     private long id;
     private String email;
@@ -22,9 +22,10 @@ public class event {
     private LocalDateTime endDateTime;
     private int priority;
 
-    public event(){}
+    public Event() {
+    }
 
-    event(
+    Event(
         long id, 
         String email, 
         String title, 
@@ -103,10 +104,10 @@ public class event {
         if(this == o)
         return true;
 
-        if(!(o instanceof event))
+    if (!(o instanceof Event))
         return false;
 
-        event event = (event) o;
+    Event event = (Event) o;
         return Objects.equals(this.id, event.id) 
         && Objects.equals(this.email, event.email)
         && Objects.equals(this.title, event.title)

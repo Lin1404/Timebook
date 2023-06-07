@@ -1,17 +1,38 @@
 
 package com.timebook.timebook.service;
 
+import com.timebook.timebook.controllers.EventController;
+import com.timebook.timebook.models.UserData;
 import com.timebook.timebook.users.User;
 import com.timebook.timebook.users.UserRepository;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private static final Log logger = LogFactory.getLog(EventController.class);
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Async
+    public void saveUser(UserData user) {
+        try {
+            User userFound = userRepository.findByEmail(user.getEmail());
+            if (userFound == null) {
+                User userToSave = new User();
+                userToSave.setCognitoId(user.getUsername());
+                userToSave.setEmail(user.getEmail());
+                userRepository.save(userToSave);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
     }
 
     // Add subscribed
