@@ -8,7 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import net.minidev.json.JSONObject;
 import jakarta.persistence.GeneratedValue;
@@ -23,9 +22,9 @@ public class User implements Serializable {
     private String cognitoId;
     private String email;
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<User> subscriber;
+    private List<User> subscribers;
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<User> subscribed;
+    private List<User> subscriptions;
     private JSONObject metadata;
 
     public User() {
@@ -35,14 +34,14 @@ public class User implements Serializable {
             long id,
             String cognitoId,
             String email,
-            List<User> subscriber,
-            List<User> subscribed,
+            List<User> subscribers,
+            List<User> subscriptions,
             JSONObject metadata) {
         this.id = id;
         this.cognitoId = cognitoId;
         this.email = email;
-        this.subscriber = subscriber;
-        this.subscribed = subscribed;
+        this.subscribers = subscribers;
+        this.subscriptions = subscriptions;
         this.metadata = metadata;
     }
 
@@ -59,11 +58,11 @@ public class User implements Serializable {
     }
 
     public List<User> getSubscriber() {
-        return this.subscriber;
+        return this.subscribers;
     }
 
     public List<User> getSubscribed() {
-        return this.subscribed;
+        return this.subscriptions;
     }
 
     public JSONObject getMetadata() {
@@ -82,12 +81,12 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public void setSubscriber(List<User> subscriber) {
-        this.subscriber = subscriber;
+    public void setSubscriber(List<User> subscribers) {
+        this.subscribers = subscribers;
     }
 
-    public void setSubscribed(List<User> subscribed) {
-        this.subscribed = subscribed;
+    public void setSubscribed(List<User> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 
     public void setMetadata(JSONObject metadata) {
@@ -106,8 +105,8 @@ public class User implements Serializable {
         return Objects.equals(this.id, user.id)
                 && Objects.equals(this.cognitoId, user.cognitoId)
                 && Objects.equals(this.email, user.email)
-                && Objects.equals(this.subscriber, user.subscriber)
-                && Objects.equals(this.subscribed, user.subscribed)
+                && Objects.equals(this.subscribers, user.subscribers)
+                && Objects.equals(this.subscriptions, user.subscriptions)
                 && Objects.equals(this.metadata, user.metadata);
     }
 
@@ -117,8 +116,8 @@ public class User implements Serializable {
                 this.id,
                 this.cognitoId,
                 this.email,
-                this.subscriber,
-                this.subscribed,
+                this.subscribers,
+                this.subscriptions,
                 this.metadata);
     }
 
@@ -128,8 +127,8 @@ public class User implements Serializable {
                 "id=" + this.id +
                 ", cognitoId='" + this.cognitoId + '\'' +
                 ", email='" + this.email + '\'' +
-                ", subscriber='" + this.subscriber +
-                ", subscribed='" + this.subscribed +
+                ", subscribers='" + this.subscribers +
+                ", subscriptions='" + this.subscriptions +
                 ", metadata='" + this.metadata +
                 '}';
     }

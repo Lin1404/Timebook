@@ -1,7 +1,6 @@
 package com.timebook.timebook.controllers;
 
 import com.timebook.timebook.models.UserData;
-import com.timebook.timebook.users.User;
 
 import com.timebook.timebook.service.UserService;
 
@@ -23,8 +22,8 @@ public class UserController {
 
     // Add subscribed
     @PostMapping(value = "v1/subscribe")
-    public void addSubscribed(@RequestBody String subscribedEmail, Authentication authentication) {
+    public void addSubscription(@RequestBody String subscribeFromEmail, Authentication authentication) {
         UserData userInfo = (UserData) authentication.getPrincipal();
-        userService.subscribe(subscribedEmail, userInfo.getEmail());
+        userService.createSubscription(subscribeFromEmail, userInfo.getEmail());
     }
 }
