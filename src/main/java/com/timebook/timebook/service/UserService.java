@@ -4,8 +4,6 @@ package com.timebook.timebook.service;
 import com.timebook.timebook.users.User;
 import com.timebook.timebook.users.UserRepository;
 
-
-import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,20 +15,14 @@ public class UserService {
     }
 
     // Add subscribed
-    public User createSubscription(String subscribeFromEmail, String subscribeToEmail) {
-        User targetUser = userRepository.findByEmail(subscribeToEmail);
-        User subscribeUser = userRepository.findByEmail(subscribeFromEmail);
-        List<User> subscribedList = targetUser.getSubscribed();
-        subscribedList.add(subscribeUser);
-        targetUser.setSubscribed(subscribedList);
+    public void createSubscription(String subscribeToEmail, String subscribeFromEmail) {
+        User toUser = userRepository.findByEmail(subscribeToEmail);
+        User fromUser = userRepository.findByEmail(subscribeFromEmail);
+        fromUser.getSubscriptions().add(toUser);
+        toUser.getSubscribers().add(fromUser);
 
-        List<User> subscriberList = subscribeUser.getSubscriber();
-        subscriberList.add(targetUser);
-        subscribeUser.setSubscriber(subscriberList);
-
-        userRepository.save(targetUser);
-        userRepository.save(subscribeUser);
-        return subscribeUser;
+        userRepository.save(fromUser);
+        userRepository.save(toUser);
     }
 
     public User printUser(String userEmail) {

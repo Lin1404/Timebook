@@ -57,11 +57,11 @@ public class User implements Serializable {
         return this.email;
     }
 
-    public List<User> getSubscriber() {
+    public List<User> getSubscribers() {
         return this.subscribers;
     }
 
-    public List<User> getSubscribed() {
+    public List<User> getSubscriptions() {
         return this.subscriptions;
     }
 
@@ -81,11 +81,11 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public void setSubscriber(List<User> subscribers) {
+    public void setSubscribers(List<User> subscribers) {
         this.subscribers = subscribers;
     }
 
-    public void setSubscribed(List<User> subscriptions) {
+    public void setSubscriptions(List<User> subscriptions) {
         this.subscriptions = subscriptions;
     }
 
