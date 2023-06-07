@@ -3,6 +3,7 @@ package com.timebook.timebook.controllers;
 import com.timebook.timebook.models.UserData;
 
 import com.timebook.timebook.service.UserService;
+import com.timebook.timebook.users.User;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,8 +23,10 @@ public class UserController {
 
     // Add subscribed
     @PostMapping(value = "v1/subscribe")
-    public void addSubscription(@RequestBody String subscribeFromEmail, Authentication authentication) {
+    public User addSubscription(@RequestBody String subscribeFromEmail, Authentication authentication) {
         UserData userInfo = (UserData) authentication.getPrincipal();
-        userService.createSubscription(subscribeFromEmail, userInfo.getEmail());
+        return userService.createSubscription(subscribeFromEmail, userInfo.getEmail());
+
+        // return userService.printUser(userInfo.getEmail());
     }
 }

@@ -17,18 +17,25 @@ public class UserService {
     }
 
     // Add subscribed
-    public void createSubscription(String subscribeFromEmail, String subscribeToEmail) {
+    public User createSubscription(String subscribeFromEmail, String subscribeToEmail) {
         User targetUser = userRepository.findByEmail(subscribeToEmail);
-        User subscriUser = userRepository.findByEmail(subscribeFromEmail);
+        User subscribeUser = userRepository.findByEmail(subscribeFromEmail);
         List<User> subscribedList = targetUser.getSubscribed();
-        subscribedList.add(subscriUser);
+        subscribedList.add(subscribeUser);
         targetUser.setSubscribed(subscribedList);
 
-        List<User> subscriberList = subscriUser.getSubscriber();
+        List<User> subscriberList = subscribeUser.getSubscriber();
         subscriberList.add(targetUser);
-        subscriUser.setSubscriber(subscriberList);
+        subscribeUser.setSubscriber(subscriberList);
 
         userRepository.save(targetUser);
-        userRepository.save(subscriUser);
+        userRepository.save(subscribeUser);
+        return subscribeUser;
     }
+
+    public User printUser(String userEmail) {
+        User targetUser = userRepository.findByEmail(userEmail);
+        return targetUser;
+    }
+
 }
