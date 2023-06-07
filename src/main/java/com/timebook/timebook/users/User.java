@@ -3,7 +3,6 @@ package com.timebook.timebook.users;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.Entity;
