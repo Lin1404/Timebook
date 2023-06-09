@@ -31,7 +31,7 @@ public class EventService {
         this.userService = userService;
     }
 
-    public Event post(Event requestEvent) {
+    public Event save(Event requestEvent) {
         return eventRepository.save(requestEvent);
     }
 
@@ -39,7 +39,7 @@ public class EventService {
         eventRepository.deleteById(id);
     }
 
-    public Predicate<Event> datefilter(String period, String date) {
+    public Predicate<Event> createDateFilter(String period, String date) {
         LocalDate selectedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = LocalDate.now();
@@ -82,18 +82,18 @@ public class EventService {
         JSONObject result = new JSONObject();
         JSONObject subscription = new JSONObject();
 
-        Predicate<Event> datefilter = this.datefilter(period, date);
+        Predicate<Event> datefilter = this.createDateFilter(period, date);
         List<Event> userEvents = eventRepository.findAllByEmail(userEmail).stream().filter(datefilter)
                 .collect(Collectors.toList());
-        for (int i = 0; i < subscritionList.size(); i++) {
-            String tragetEmail = subscritionList.get(i);
-            List<Event> subEvents = eventRepository.findAllByEmail(tragetEmail).stream().filter(datefilter)
+
+        subscritionList.forEach(sub -> {
+            List<Event> subEvents = eventRepository.findAllByEmail(sub).stream().filter(datefilter)
                     .collect(Collectors.toList());
-            subscription.put(tragetEmail, subEvents);
-        }
+            subscription.put(sub, subEvents);
+        });
 
         result.put(userEmail, userEvents);
-        result.put("Subscription", subscription);
+        result.put("subscription", subscription);
 
         return result;
     }

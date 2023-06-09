@@ -36,7 +36,7 @@ public class EventController {
     public Event saveEvent(@RequestBody Event requestEvent, Authentication authentication) {
         UserData user = (UserData) authentication.getPrincipal();
         requestEvent.setEmail(user.getEmail());
-        return eventService.post(requestEvent);
+        return eventService.save(requestEvent);
     }
 
     // Deleting an event
