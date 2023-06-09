@@ -49,6 +49,19 @@ public class UserService {
         }
     }
 
+    public void deleteSubscription(String unSubscribeToEmail, String unsubscribeFromEmail) {
+        User fromUser = userRepository.findByEmail(unsubscribeFromEmail);
+        User toUser = userRepository.findByEmail(unSubscribeToEmail);
+
+        if (fromUser.getSubscriptions().contains(toUser)) {
+            fromUser.getSubscriptions().remove(toUser);
+            toUser.getSubscribers().remove(fromUser);
+
+            userRepository.save(fromUser);
+            userRepository.save(toUser);
+        }
+    }
+
     public String printUser(String userEmail) {
         User targetUser = userRepository.findByEmail(userEmail);
         return targetUser.toString();
