@@ -1,7 +1,7 @@
 package com.timebook.timebook.controllers;
 
 import com.timebook.timebook.models.UserData;
-
+import com.timebook.timebook.models.users.User;
 import com.timebook.timebook.service.UserService;
 
 import org.springframework.security.core.Authentication;
@@ -32,5 +32,11 @@ public class UserController {
     public void deleteSubscription(@RequestBody String unSubscribeToEmail, Authentication authentication) {
         UserData userInfo = (UserData) authentication.getPrincipal();
         userService.deleteSubscription(unSubscribeToEmail, userInfo.getEmail());
+    }
+
+    @PostMapping(value = "v1/lastview")
+    public User updateLastView(@RequestBody String view, Authentication authentication) {
+        UserData userInfo = (UserData) authentication.getPrincipal();
+        return userService.updateLastView(view, userInfo.getEmail());
     }
 }

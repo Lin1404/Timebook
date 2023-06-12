@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -26,6 +30,8 @@ public class User implements Serializable {
     private List<User> subscribers;
     @ManyToMany(fetch = FetchType.LAZY)
     private List<User> subscriptions;
+    @Type(name = "jsonb", value = JsonBinaryType.class)
+    @Column(columnDefinition = "jsonb")
     private JSONObject metadata;
 
     public User() {
@@ -105,10 +111,7 @@ public class User implements Serializable {
         User user = (User) o;
         return Objects.equals(this.id, user.id)
                 && Objects.equals(this.cognitoId, user.cognitoId)
-                && Objects.equals(this.email, user.email)
-                && Objects.equals(this.subscribers, user.subscribers)
-                && Objects.equals(this.subscriptions, user.subscriptions)
-                && Objects.equals(this.metadata, user.metadata);
+                && Objects.equals(this.email, user.email);
     }
 
     @Override

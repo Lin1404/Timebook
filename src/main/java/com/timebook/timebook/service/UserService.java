@@ -6,6 +6,8 @@ import com.timebook.timebook.models.UserData;
 import com.timebook.timebook.models.users.User;
 import com.timebook.timebook.models.users.UserRepository;
 
+import net.minidev.json.JSONObject;
+
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.apache.commons.logging.Log;
@@ -40,7 +42,7 @@ public class UserService {
         User fromUser = userRepository.findByEmail(subscribeFromEmail);
         User toUser = userRepository.findByEmail(subscribeToEmail);
 
-        if(!fromUser.getSubscriptions().contains(toUser)){
+        if (fromUser != null && !fromUser.getSubscriptions().contains(toUser)) {
             fromUser.getSubscriptions().add(toUser);
             toUser.getSubscribers().add(fromUser);
     
@@ -53,7 +55,7 @@ public class UserService {
         User fromUser = userRepository.findByEmail(unsubscribeFromEmail);
         User toUser = userRepository.findByEmail(unSubscribeToEmail);
 
-        if (fromUser.getSubscriptions().contains(toUser)) {
+        if (fromUser != null && fromUser.getSubscriptions().contains(toUser)) {
             fromUser.getSubscriptions().remove(toUser);
             toUser.getSubscribers().remove(fromUser);
 
@@ -70,5 +72,12 @@ public class UserService {
     public User findUserByEmail(String userEmail) {
         User targetUser = userRepository.findByEmail(userEmail);
         return targetUser;
+    }
+
+    public User updateLastView(String view, String userEmail) {
+        User user = userRepository.findByEmail(userEmail);
+        JSONObject metaData = user.getMetadata();
+        metaData.put("lastView", view);
+        return user;
     }
 }
