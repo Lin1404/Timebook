@@ -31,7 +31,7 @@ public class EventService {
         this.userService = userService;
     }
 
-    public Event post(Event requestEvent) {
+    public Event save(Event requestEvent) {
         return eventRepository.save(requestEvent);
     }
 
