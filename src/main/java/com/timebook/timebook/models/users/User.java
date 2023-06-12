@@ -1,4 +1,4 @@
-package com.timebook.timebook.users;
+package com.timebook.timebook.models.users;
 
 import java.io.Serializable;
 import java.util.List;
