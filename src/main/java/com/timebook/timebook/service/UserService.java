@@ -8,7 +8,9 @@ import com.timebook.timebook.models.users.UserRepository;
 
 import net.minidev.json.JSONObject;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.events.EventException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -36,30 +38,45 @@ public class UserService {
     }
 
     // Add subscribed
-    public void createSubscription(String subscribeToEmail, String subscribeFromEmail) {
+    public void createSubscription(String subscribeToEmail, String subscribeFromEmail)
+            throws UsernameNotFoundException, NullPointerException {
         User fromUser = userRepository.findByEmail(subscribeFromEmail);
         User toUser = userRepository.findByEmail(subscribeToEmail);
 
-        if (fromUser != null && !fromUser.getSubscriptions().contains(toUser)) {
-            fromUser.getSubscriptions().add(toUser);
-            toUser.getSubscribers().add(fromUser);
-    
-            userRepository.save(fromUser);
-            userRepository.save(toUser);
+        if (toUser == null || fromUser == null) {
+            throw new UsernameNotFoundException("Email not found.");
         }
+
+        if (!fromUser.getSubscriptions().contains(toUser)) {
+            throw new NullPointerException("User has not subscribed this email.");
+        }
+
+        fromUser.getSubscriptions().add(toUser);
+        toUser.getSubscribers().add(fromUser);
+
+        userRepository.save(fromUser);
+        userRepository.save(toUser);
+
     }
 
-    public void deleteSubscription(String unSubscribeToEmail, String unsubscribeFromEmail) {
+    public void deleteSubscription(String unSubscribeToEmail, String unsubscribeFromEmail)
+            throws UsernameNotFoundException, NullPointerException {
         User fromUser = userRepository.findByEmail(unsubscribeFromEmail);
         User toUser = userRepository.findByEmail(unSubscribeToEmail);
 
-        if (fromUser != null && fromUser.getSubscriptions().contains(toUser)) {
-            fromUser.getSubscriptions().remove(toUser);
-            toUser.getSubscribers().remove(fromUser);
-
-            userRepository.save(fromUser);
-            userRepository.save(toUser);
+        if (toUser == null || fromUser == null) {
+            throw new UsernameNotFoundException("Email not found.");
         }
+
+        if (!fromUser.getSubscriptions().contains(toUser)) {
+            throw new NullPointerException("User has not subscribed this email.");
+        }
+
+        fromUser.getSubscriptions().remove(toUser);
+        toUser.getSubscribers().remove(fromUser);
+
+        userRepository.save(fromUser);
+        userRepository.save(toUser);
     }
 
     public String printUser(String userEmail) {
