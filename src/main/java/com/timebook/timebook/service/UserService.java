@@ -8,7 +8,6 @@ import com.timebook.timebook.models.users.UserRepository;
 
 import net.minidev.json.JSONObject;
 
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,13 +15,12 @@ import org.apache.commons.logging.LogFactory;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private static final Log logger = LogFactory.getLog(EventController.class);
+    private final Log logger = LogFactory.getLog(EventController.class);
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    @Async
     public void saveUser(UserData user) {
         try {
             User userFound = userRepository.findByEmail(user.getEmail());
@@ -76,8 +74,22 @@ public class UserService {
 
     public User updateLastView(String view, String userEmail) {
         User user = userRepository.findByEmail(userEmail);
-        JSONObject metaData = user.getMetadata();
-        metaData.put("lastView", view);
+
+        if (user.getMetadata() != null) {
+            JSONObject metaData = user.getMetadata();
+            metaData.put("lastView", view);
+            userRepository.save(user);
+        } else {
+            JSONObject metaData = new JSONObject();
+            metaData.put("lastView", view);
+            user.setMetadata(metaData);
+            userRepository.save(user);
+        }
+        return user;
+    }
+
+    public User getUser(String userEmail) {
+        User user = userRepository.findByEmail(userEmail);
         return user;
     }
 }
