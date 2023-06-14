@@ -7,6 +7,7 @@ import com.timebook.timebook.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,5 +39,12 @@ public class UserController {
     public User updateLastView(@RequestBody String view, Authentication authentication) {
         UserData userInfo = (UserData) authentication.getPrincipal();
         return userService.updateLastView(view, userInfo.getEmail());
+    }
+
+    // For testing
+    @GetMapping(value = "v1/getUser")
+    public User getUser(Authentication authentication) {
+        UserData userInfo = (UserData) authentication.getPrincipal();
+        return userService.getUser(userInfo.getEmail());
     }
 }
