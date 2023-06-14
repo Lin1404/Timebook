@@ -1,7 +1,6 @@
 
 package com.timebook.timebook.service;
 
-import com.timebook.timebook.controllers.EventController;
 import com.timebook.timebook.models.UserData;
 import com.timebook.timebook.models.users.User;
 import com.timebook.timebook.models.users.UserRepository;
@@ -16,7 +15,7 @@ import org.apache.commons.logging.LogFactory;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final Log logger = LogFactory.getLog(EventController.class);
+    private final Log logger = LogFactory.getLog(UserService.class);
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
