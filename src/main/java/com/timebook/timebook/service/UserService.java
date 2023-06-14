@@ -10,7 +10,6 @@ import net.minidev.json.JSONObject;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.events.EventException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
