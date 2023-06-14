@@ -1,12 +1,10 @@
 
 package com.timebook.timebook.service;
 
-import com.timebook.timebook.controllers.EventController;
 import com.timebook.timebook.models.UserData;
 import com.timebook.timebook.models.users.User;
 import com.timebook.timebook.models.users.UserRepository;
 
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,13 +12,12 @@ import org.apache.commons.logging.LogFactory;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private static final Log logger = LogFactory.getLog(EventController.class);
+    private final Log logger = LogFactory.getLog(UserService.class);
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    @Async
     public void saveUser(UserData user) {
         try {
             User userFound = userRepository.findByEmail(user.getEmail());
@@ -40,10 +37,10 @@ public class UserService {
         User fromUser = userRepository.findByEmail(subscribeFromEmail);
         User toUser = userRepository.findByEmail(subscribeToEmail);
 
-        if(!fromUser.getSubscriptions().contains(toUser)){
+        if (!fromUser.getSubscriptions().contains(toUser)) {
             fromUser.getSubscriptions().add(toUser);
             toUser.getSubscribers().add(fromUser);
-    
+
             userRepository.save(fromUser);
             userRepository.save(toUser);
         }
