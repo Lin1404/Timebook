@@ -4,13 +4,11 @@ import com.timebook.timebook.models.events.Event;
 import com.timebook.timebook.models.events.EventRepository;
 import com.timebook.timebook.models.users.User;
 
-import net.minidev.json.JSONObject;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalField;
@@ -74,27 +72,24 @@ public class EventService {
         return datefilter;
     }
 
-    public JSONObject getEventsWithSubscription(String period, String date, String userEmail) {
+    public List<Event> getEventsWithSubscription(String period, String date, String userEmail) {
         User fromUser = userService.findUserByEmail(userEmail);
         List<String> subscritionList = fromUser.getSubscriptions().stream().map(User::getEmail)
                 .collect(Collectors.toList());
 
-        JSONObject result = new JSONObject();
-        JSONObject subscription = new JSONObject();
+        List<Event> targetEvents = new ArrayList<>();
 
         Predicate<Event> datefilter = this.createDateFilter(period, date);
         List<Event> userEvents = eventRepository.findAllByEmail(userEmail).stream().filter(datefilter)
                 .collect(Collectors.toList());
+        targetEvents.addAll(userEvents);
 
         subscritionList.forEach(sub -> {
             List<Event> subEvents = eventRepository.findAllByEmail(sub).stream().filter(datefilter)
                     .collect(Collectors.toList());
-            subscription.put(sub, subEvents);
+            targetEvents.addAll(subEvents);
         });
 
-        result.put(userEmail, userEvents);
-        result.put("subscription", subscription);
-
-        return result;
+        return targetEvents;
     }
 }
