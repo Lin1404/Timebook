@@ -1,8 +1,13 @@
 package com.timebook.timebook.controllers;
 
+import com.timebook.timebook.aws.AwsCognitoJwtAuthFilter;
 import com.timebook.timebook.models.UserData;
 import com.timebook.timebook.service.UserService;
 
+import net.minidev.json.JSONObject;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+    private static final Log logger = LogFactory.getLog(AwsCognitoJwtAuthFilter.class);
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -26,8 +32,9 @@ public class UserController {
 
     // Add subscribed
     @PostMapping(value = "v1/subscribe")
-    public ResponseEntity<String> addSubscription(@RequestBody String subscribeToEmail, Authentication authentication) {
+    public ResponseEntity<String> addSubscription(@RequestBody JSONObject payload, Authentication authentication) {
         try {
+            String subscribeToEmail = (String) payload.get("email");
             UserData userInfo = (UserData) authentication.getPrincipal();
             userService.createSubscription(subscribeToEmail, userInfo.getEmail());
             return ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Successfully Add Subscription.");
@@ -39,9 +46,10 @@ public class UserController {
     }
 
     @DeleteMapping(value = "v1/unsubscribe")
-    public ResponseEntity<String> deleteSubscription(@RequestBody String unSubscribeToEmail,
+    public ResponseEntity<String> deleteSubscription(@RequestBody JSONObject payload,
             Authentication authentication) {
         try {
+            String unSubscribeToEmail = (String) payload.get("email");
             UserData userInfo = (UserData) authentication.getPrincipal();
             userService.deleteSubscription(unSubscribeToEmail, userInfo.getEmail());
             return ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Successfully Delete Subscription.");
