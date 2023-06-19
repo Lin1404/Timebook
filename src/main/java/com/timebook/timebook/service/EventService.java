@@ -77,19 +77,19 @@ public class EventService {
         List<String> subscritionList = fromUser.getSubscriptions().stream().map(User::getEmail)
                 .collect(Collectors.toList());
 
-        List<Event> targetEvents = new ArrayList<>();
+        List<Event> allEvents = new ArrayList<>();
 
         Predicate<Event> datefilter = this.createDateFilter(period, date);
         List<Event> userEvents = eventRepository.findAllByEmail(userEmail).stream().filter(datefilter)
                 .collect(Collectors.toList());
-        targetEvents.addAll(userEvents);
+        allEvents.addAll(userEvents);
 
         subscritionList.forEach(sub -> {
             List<Event> subEvents = eventRepository.findAllByEmail(sub).stream().filter(datefilter)
                     .collect(Collectors.toList());
-            targetEvents.addAll(subEvents);
+            allEvents.addAll(subEvents);
         });
 
-        return targetEvents;
+        return allEvents;
     }
 }
