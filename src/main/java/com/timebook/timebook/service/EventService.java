@@ -73,8 +73,12 @@ public class EventService {
     }
 
     public List<Event> getEventsWithSubscription(String period, String date, String userEmail) {
-        User fromUser = userService.findUserByEmail(userEmail);
-        List<String> subscritionList = fromUser.getSubscriptions().stream().map(User::getEmail)
+        User user = this.userService.findUserByEmail(userEmail);
+
+        this.userService.updateLastView(period, user);
+        
+        List<String> subscritionList = user.getSubscriptions().stream().map(User
+                ::getEmail)
                 .collect(Collectors.toList());
 
         List<Event> allEvents = new ArrayList<>();

@@ -125,9 +125,12 @@ public class User implements Serializable {
                 "id=" + this.id +
                 ", cognitoId='" + this.cognitoId + '\'' +
                 ", email='" + this.email + '\'' +
-                ", subscribers='" + this.subscribers.stream().map(User::getEmail).collect(Collectors.toList()) +
-                ", subscriptions='" + this.subscriptions.stream().map(User::getEmail).collect(Collectors.toList()) +
-                // ", metadata='" + this.metadata +
+                ", subscribers='" +
+                this.subscribers.stream().map(User::getEmail).collect(Collectors.toList()) +
+                ", subscriptions='" +
+                this.subscriptions.stream().map(User::getEmail).collect(Collectors.toList())
+                +
+                ", metadata='" + this.metadata.toJSONString() +
                 '}';
     }
 }

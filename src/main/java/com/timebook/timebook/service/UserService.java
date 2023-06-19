@@ -31,7 +31,7 @@ public class UserService {
                 userRepository.save(userToSave);
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            this.logger.error(e.getMessage());
         }
     }
 
@@ -45,8 +45,8 @@ public class UserService {
             throw new UsernameNotFoundException("Email not found.");
         }
 
-        if (!fromUser.getSubscriptions().contains(toUser)) {
-            throw new NullPointerException("User has not subscribed this email.");
+        if (fromUser.getSubscriptions().contains(toUser)) {
+            throw new NullPointerException("User has subscribed this email already.");
         }
 
         fromUser.getSubscriptions().add(toUser);
@@ -87,24 +87,18 @@ public class UserService {
         return targetUser;
     }
 
-    public User updateLastView(String view, String userEmail) {
-        User user = userRepository.findByEmail(userEmail);
-
+    public void updateLastView(String view, User user) throws UsernameNotFoundException {
+        JSONObject metaData = new JSONObject();
         if (user.getMetadata() != null) {
-            JSONObject metaData = user.getMetadata();
-            metaData.put("lastView", view);
-            userRepository.save(user);
-        } else {
-            JSONObject metaData = new JSONObject();
-            metaData.put("lastView", view);
-            user.setMetadata(metaData);
-            userRepository.save(user);
+            metaData = user.getMetadata();
         }
-        return user;
+        metaData.put("lastView", view);
+        user.setMetadata(metaData);
+        userRepository.save(user);
     }
 
-    public User getUser(String userEmail) {
+    public String getUser(String userEmail) {
         User user = userRepository.findByEmail(userEmail);
-        return user;
+        return user.toString();
     }
 }

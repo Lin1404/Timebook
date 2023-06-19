@@ -1,7 +1,6 @@
 package com.timebook.timebook.controllers;
 
 import com.timebook.timebook.models.UserData;
-import com.timebook.timebook.models.users.User;
 import com.timebook.timebook.service.UserService;
 
 import org.apache.http.HttpStatus;
@@ -53,15 +52,9 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = "v1/lastview")
-    public User updateLastView(@RequestBody String view, Authentication authentication) {
-        UserData userInfo = (UserData) authentication.getPrincipal();
-        return userService.updateLastView(view, userInfo.getEmail());
-    }
-
     // For testing
     @GetMapping(value = "v1/getUser")
-    public User getUser(Authentication authentication) {
+    public String getUser(Authentication authentication) {
         UserData userInfo = (UserData) authentication.getPrincipal();
         return userService.getUser(userInfo.getEmail());
     }
