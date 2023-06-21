@@ -45,16 +45,13 @@ public class UserService {
             throw new UsernameNotFoundException("Email not found.");
         }
 
-        if (fromUser.getSubscriptions().contains(toUser)) {
-            throw new NullPointerException("User has subscribed this email already.");
+        if (!fromUser.getSubscriptions().contains(toUser)) {
+            fromUser.getSubscriptions().add(toUser);
+            toUser.getSubscribers().add(fromUser);
+
+            userRepository.save(fromUser);
+            userRepository.save(toUser);
         }
-
-        fromUser.getSubscriptions().add(toUser);
-        toUser.getSubscribers().add(fromUser);
-
-        userRepository.save(fromUser);
-        userRepository.save(toUser);
-
     }
 
     public void deleteSubscription(String unSubscribeToEmail, String unsubscribeFromEmail)
@@ -66,15 +63,13 @@ public class UserService {
             throw new UsernameNotFoundException("Email not found.");
         }
 
-        if (!fromUser.getSubscriptions().contains(toUser)) {
-            throw new NullPointerException("User has not subscribed this email.");
+        if (fromUser.getSubscriptions().contains(toUser)) {
+            fromUser.getSubscriptions().remove(toUser);
+            toUser.getSubscribers().remove(fromUser);
+
+            userRepository.save(fromUser);
+            userRepository.save(toUser);
         }
-
-        fromUser.getSubscriptions().remove(toUser);
-        toUser.getSubscribers().remove(fromUser);
-
-        userRepository.save(fromUser);
-        userRepository.save(toUser);
     }
 
     public String printUser(String userEmail) {

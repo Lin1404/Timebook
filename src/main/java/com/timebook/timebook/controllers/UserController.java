@@ -1,13 +1,10 @@
 package com.timebook.timebook.controllers;
 
-import com.timebook.timebook.aws.AwsCognitoJwtAuthFilter;
 import com.timebook.timebook.models.UserData;
 import com.timebook.timebook.service.UserService;
 
 import net.minidev.json.JSONObject;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
-    private static final Log logger = LogFactory.getLog(AwsCognitoJwtAuthFilter.class);
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -39,9 +35,9 @@ public class UserController {
             userService.createSubscription(subscribeToEmail, userInfo.getEmail());
             return ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Successfully Add Subscription.");
         } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Expectation Failed from Client (CODE 400)\n");
-        } catch (NullPointerException e) {
-            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Can not find user.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -54,9 +50,9 @@ public class UserController {
             userService.deleteSubscription(unSubscribeToEmail, userInfo.getEmail());
             return ResponseEntity.status(HttpStatus.SC_ACCEPTED).body("Successfully Delete Subscription.");
         } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Expectation Failed from Client (CODE 400)\n");
-        } catch (NullPointerException e) {
-            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Can not find user.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
         }
     }
 
