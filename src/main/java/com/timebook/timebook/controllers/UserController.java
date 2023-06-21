@@ -41,7 +41,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping(value = "v1/unsubscribe")
+    @PostMapping(value = "v1/unsubscribe")
     public ResponseEntity<String> deleteSubscription(@RequestBody JSONObject payload,
             Authentication authentication) {
         try {
