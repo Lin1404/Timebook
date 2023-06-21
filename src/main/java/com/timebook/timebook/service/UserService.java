@@ -37,7 +37,7 @@ public class UserService {
 
     // Add subscribed
     public void createSubscription(String subscribeToEmail, String subscribeFromEmail)
-            throws UsernameNotFoundException, NullPointerException {
+            throws UsernameNotFoundException {
         User fromUser = userRepository.findByEmail(subscribeFromEmail);
         User toUser = userRepository.findByEmail(subscribeToEmail);
 
@@ -55,7 +55,7 @@ public class UserService {
     }
 
     public void deleteSubscription(String unSubscribeToEmail, String unsubscribeFromEmail)
-            throws UsernameNotFoundException, NullPointerException {
+            throws UsernameNotFoundException {
         User fromUser = userRepository.findByEmail(unsubscribeFromEmail);
         User toUser = userRepository.findByEmail(unSubscribeToEmail);
 
