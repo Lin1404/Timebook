@@ -105,10 +105,7 @@ public class User implements Serializable {
         User user = (User) o;
         return Objects.equals(this.id, user.id)
                 && Objects.equals(this.cognitoId, user.cognitoId)
-                && Objects.equals(this.email, user.email)
-                && Objects.equals(this.subscribers, user.subscribers)
-                && Objects.equals(this.subscriptions, user.subscriptions)
-                && Objects.equals(this.metadata, user.metadata);
+                && Objects.equals(this.email, user.email);
     }
 
     @Override
@@ -128,9 +125,12 @@ public class User implements Serializable {
                 "id=" + this.id +
                 ", cognitoId='" + this.cognitoId + '\'' +
                 ", email='" + this.email + '\'' +
-                ", subscribers='" + this.subscribers.stream().map(User::getEmail).collect(Collectors.toList()) +
-                ", subscriptions='" + this.subscriptions.stream().map(User::getEmail).collect(Collectors.toList()) +
-                // ", metadata='" + this.metadata +
+                ", subscribers='" +
+                this.subscribers.stream().map(User::getEmail).collect(Collectors.toList()) +
+                ", subscriptions='" +
+                this.subscriptions.stream().map(User::getEmail).collect(Collectors.toList())
+                +
+                ", metadata='" + this.metadata.toJSONString() +
                 '}';
     }
 }

@@ -5,6 +5,9 @@ import com.timebook.timebook.models.UserData;
 import com.timebook.timebook.models.users.User;
 import com.timebook.timebook.models.users.UserRepository;
 
+import net.minidev.json.JSONObject;
+
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,14 +31,19 @@ public class UserService {
                 userRepository.save(userToSave);
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            this.logger.error(e.getMessage());
         }
     }
 
     // Add subscribed
-    public void createSubscription(String subscribeToEmail, String subscribeFromEmail) {
+    public void createSubscription(String subscribeToEmail, String subscribeFromEmail)
+            throws UsernameNotFoundException {
         User fromUser = userRepository.findByEmail(subscribeFromEmail);
         User toUser = userRepository.findByEmail(subscribeToEmail);
+
+        if (toUser == null || fromUser == null) {
+            throw new UsernameNotFoundException("Email not found.");
+        }
 
         if (!fromUser.getSubscriptions().contains(toUser)) {
             fromUser.getSubscriptions().add(toUser);
@@ -46,9 +54,14 @@ public class UserService {
         }
     }
 
-    public void deleteSubscription(String unSubscribeToEmail, String unsubscribeFromEmail) {
+    public void deleteSubscription(String unSubscribeToEmail, String unsubscribeFromEmail)
+            throws UsernameNotFoundException {
         User fromUser = userRepository.findByEmail(unsubscribeFromEmail);
         User toUser = userRepository.findByEmail(unSubscribeToEmail);
+
+        if (toUser == null || fromUser == null) {
+            throw new UsernameNotFoundException("Email not found.");
+        }
 
         if (fromUser.getSubscriptions().contains(toUser)) {
             fromUser.getSubscriptions().remove(toUser);
@@ -67,5 +80,20 @@ public class UserService {
     public User findUserByEmail(String userEmail) {
         User targetUser = userRepository.findByEmail(userEmail);
         return targetUser;
+    }
+
+    public void updateLastView(String view, User user) throws UsernameNotFoundException {
+        JSONObject metaData = new JSONObject();
+        if (user.getMetadata() != null) {
+            metaData = user.getMetadata();
+        }
+        metaData.put("lastView", view);
+        user.setMetadata(metaData);
+        userRepository.save(user);
+    }
+
+    public String getUser(String userEmail) {
+        User user = userRepository.findByEmail(userEmail);
+        return user.toString();
     }
 }
