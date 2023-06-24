@@ -59,7 +59,7 @@ public class EventService {
             List<Event> events = this.eventRepository.findAllByEmailFromStartDateTimeForAnInterval(
                     email,
                     startDateTimeStr,
-                    String.format("1 %s", period));
+                    String.format("1 %s", period)); // 1 week || 1 month || 1 year
             return events;
         }).flatMap(List::stream).collect(Collectors.toList());
 
