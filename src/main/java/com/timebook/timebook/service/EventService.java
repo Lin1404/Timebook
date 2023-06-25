@@ -38,8 +38,11 @@ public class EventService {
     private String getStartDatetimeStr(String date) {
         LocalDate selectedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         TemporalField fieldUS = WeekFields.of(Locale.US).dayOfWeek();
-        LocalDateTime startDateTime = selectedDate.with(fieldUS, 1).atStartOfDay().atZone(ZoneOffset.UTC)
-                .toLocalDateTime();
+        // TODO: Move to client side so client and server can be in different timezones.
+        ZoneOffset offset = ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now());
+        // Get the start of the week in related to dynamic local timezone;
+        LocalDateTime startDateTime = selectedDate.with(fieldUS, 1).atStartOfDay()
+                .minusSeconds(offset.getTotalSeconds());
 
         return startDateTime.toString();
     }
