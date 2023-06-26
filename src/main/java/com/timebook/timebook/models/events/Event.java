@@ -22,7 +22,7 @@ public class Event {
     @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private LocalDateTime endDateTime;
     private int priority;
-    private Boolean isVisible;
+    private Boolean isVisible = true;
 
     public Event() {
     }

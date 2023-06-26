@@ -42,11 +42,7 @@ public class EventController {
         try {
             UserData user = (UserData) authentication.getPrincipal();
             requestEvent.setEmail(user.getEmail());
-            if (requestEvent.getIsVisible() == null) {
-                requestEvent.setIsVisible(true);
-            }
             return ResponseEntity.ok(eventService.save(requestEvent));
-
         } catch (ValidationException e) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Event is invalid.");
         }
