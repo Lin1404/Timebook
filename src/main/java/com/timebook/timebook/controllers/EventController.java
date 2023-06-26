@@ -68,6 +68,6 @@ public class EventController {
     public List<Event> annually(@PathVariable("date") String date, Authentication authentication) {
         UserData user = (UserData) authentication.getPrincipal();
         userService.saveUser(user);
-        return eventService.getEventsWithSubscription("annual", date, user.getEmail());
+        return eventService.getEventsWithSubscription("year", date, user.getEmail());
     }
 }

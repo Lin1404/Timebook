@@ -7,13 +7,11 @@ import com.timebook.timebook.models.users.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -37,62 +35,36 @@ public class EventService {
         eventRepository.deleteById(id);
     }
 
-    public Predicate<Event> createDateFilter(String period, String date) {
+    private String getStartDatetimeStr(String date) {
         LocalDate selectedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        LocalDate startDate = LocalDate.now();
-        LocalDate endDate = LocalDate.now();
         TemporalField fieldUS = WeekFields.of(Locale.US).dayOfWeek();
+        // TODO: Move to client side so client and server can be in different timezones.
+        ZoneOffset offset = ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now());
+        // Get the start of the week in related to dynamic local timezone;
+        LocalDateTime startDateTime = selectedDate.with(fieldUS, 1).atStartOfDay()
+                .minusSeconds(offset.getTotalSeconds());
 
-        switch (period) {
-            case "week":
-                startDate = selectedDate.with(fieldUS, 1);
-                endDate = startDate.plusDays(7);
-                break;
-
-            case "month":
-                startDate = selectedDate.withDayOfMonth(1);
-                endDate = selectedDate.plusMonths(1).withDayOfMonth(1);
-                break;
-
-            case "annual":
-                startDate = selectedDate.withDayOfYear(1);
-                endDate = selectedDate.plusYears(1).withDayOfYear(1);
-                break;
-
-            default:
-                break;
-        }
-        LocalDateTime startDateTime = startDate.atStartOfDay().atZone(ZoneOffset.UTC).toLocalDateTime();
-        LocalDateTime endDateTime = endDate.atStartOfDay().atZone(ZoneOffset.UTC).toLocalDateTime();
-
-        Predicate<Event> datefilter = e -> !((Timestamp.valueOf(e.getEndDateTime()).toLocalDateTime()
-                .isBefore(startDateTime)
-                || Timestamp.valueOf(e.getStartDateTime()).toLocalDateTime().isAfter(endDateTime)));
-
-        return datefilter;
+        return startDateTime.toString();
     }
 
     public List<Event> getEventsWithSubscription(String period, String date, String userEmail) {
         User user = this.userService.findUserByEmail(userEmail);
 
         this.userService.updateLastView(period, user);
-        
-        List<String> subscritionList = user.getSubscriptions().stream().map(User
-                ::getEmail)
-                .collect(Collectors.toList());
 
-        List<Event> allEvents = new ArrayList<>();
+        List<String> allEmails = new ArrayList<>();
+        allEmails.add(userEmail);
+        allEmails.addAll(user.getSubscriptions().stream().map(User::getEmail)
+                .collect(Collectors.toList()));
 
-        Predicate<Event> datefilter = this.createDateFilter(period, date);
-        List<Event> userEvents = eventRepository.findAllByEmail(userEmail).stream().filter(datefilter)
-                .collect(Collectors.toList());
-        allEvents.addAll(userEvents);
-
-        subscritionList.forEach(sub -> {
-            List<Event> subEvents = eventRepository.findAllByEmail(sub).stream().filter(datefilter)
-                    .collect(Collectors.toList());
-            allEvents.addAll(subEvents);
-        });
+        String startDateTimeStr = this.getStartDatetimeStr(date);
+        List<Event> allEvents = allEmails.parallelStream().map(email -> {
+            List<Event> events = this.eventRepository.findAllByEmailFromStartDateTimeForAnInterval(
+                    email,
+                    startDateTimeStr,
+                    String.format("1 %s", period)); // 1 week || 1 month || 1 year
+            return events;
+        }).flatMap(List::stream).collect(Collectors.toList());
 
         return allEvents;
     }
