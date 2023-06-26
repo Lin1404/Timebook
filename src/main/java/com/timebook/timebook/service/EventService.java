@@ -30,8 +30,7 @@ public class EventService {
     }
 
     public Event save(Event requestEvent) throws ValidationException {
-        boolean eventChecking = this.eventValidation(requestEvent);
-        if (!eventChecking) {
+        if (!this.isEventValid(requestEvent)) {
             throw new ValidationException("Event validation failed.");
         }
         return eventRepository.save(requestEvent);
@@ -41,14 +40,14 @@ public class EventService {
         eventRepository.deleteById(id);
     }
 
-    private boolean eventValidation(Event event) {
-        boolean validation = true;
-        if(
-            event.getEmail() == null ||
+    private boolean isEventValid(Event event) {
+        if (event.getEmail() == null ||
             event.getStartDateTime() == null ||
             event.getEndDateTime() == null
-        ) { validation = false;}
-        return validation;
+        ) {
+            return false;
+        }
+        return true;
     }
 
     private String getStartDatetimeStr(String date) {
