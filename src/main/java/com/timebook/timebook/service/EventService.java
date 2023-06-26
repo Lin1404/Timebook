@@ -41,8 +41,7 @@ public class EventService {
     }
 
     private boolean isEventValid(Event event) {
-        if (event.getEmail() == null ||
-            event.getStartDateTime() == null ||
+        if (event.getStartDateTime() == null ||
             event.getEndDateTime() == null  ||
             event.getStartDateTime().isAfter(event.getEndDateTime())
         ) {
