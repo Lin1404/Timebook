@@ -5,10 +5,14 @@ import com.timebook.timebook.models.events.Event;
 import com.timebook.timebook.service.EventService;
 import com.timebook.timebook.service.UserService;
 
+import jakarta.validation.ValidationException;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+import org.apache.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,10 +38,17 @@ public class EventController {
 
     // Add / Update event
     @PostMapping(value = "v1/events")
-    public Event saveEvent(@RequestBody Event requestEvent, Authentication authentication) {
-        UserData user = (UserData) authentication.getPrincipal();
-        requestEvent.setEmail(user.getEmail());
-        return eventService.save(requestEvent);
+    public Object saveEvent(@RequestBody Event requestEvent, Authentication authentication) {
+        try {
+            UserData user = (UserData) authentication.getPrincipal();
+            requestEvent.setEmail(user.getEmail());
+            if (requestEvent.getIsVisible() == null) {
+                requestEvent.setIsVisible(true);
+            }
+            return eventService.save(requestEvent);
+        } catch (ValidationException e) {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Event is invalid.");
+        }
     }
 
     // Deleting an event
