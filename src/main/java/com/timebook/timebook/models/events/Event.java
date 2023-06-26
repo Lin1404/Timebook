@@ -22,6 +22,7 @@ public class Event {
     @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private LocalDateTime endDateTime;
     private int priority;
+    private Boolean isVisible;
 
     public Event() {
     }
@@ -33,7 +34,8 @@ public class Event {
             String description,
             LocalDateTime startDateTime,
             LocalDateTime endDateTime,
-            int priority) {
+            int priority,
+            Boolean isVisible) {
         this.id = id;
         this.email = email;
         this.title = title;
@@ -41,6 +43,7 @@ public class Event {
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.priority = priority;
+        this.isVisible = isVisible;
     }
 
     public long getId() {
@@ -71,6 +74,10 @@ public class Event {
         return this.priority;
     }
 
+    public Boolean getIsVisible() {
+        return this.isVisible;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -99,6 +106,10 @@ public class Event {
         this.priority = priority;
     }
 
+    public void setIsVisible(Boolean isVisible) {
+        this.isVisible = isVisible;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -114,7 +125,8 @@ public class Event {
                 && Objects.equals(this.description, event.description)
                 && Objects.equals(this.startDateTime, event.startDateTime)
                 && Objects.equals(this.endDateTime, event.endDateTime)
-                && Objects.equals(this.priority, priority);
+                && Objects.equals(this.priority, priority)
+                && Objects.equals(this.isVisible, isVisible);
 
     }
 
@@ -129,6 +141,6 @@ public class Event {
         return "event{" + "id=" + this.id + ", email='" + this.email + '\'' + ", title='" + this.title + '\''
                 + ", description='" + this.description + '\'' +
                 ", startDateTime='" + this.startDateTime + ", endDateTime='" + this.endDateTime + ", priority='"
-                + this.priority + '}';
+                + this.priority + ", isVisible='" + this.isVisible + '}';
     }
 }
