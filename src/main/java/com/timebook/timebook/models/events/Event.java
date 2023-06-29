@@ -22,7 +22,7 @@ public class Event {
     @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private LocalDateTime endDateTime;
     private int priority;
-    private Boolean isVisible = true;
+    private Boolean isPublic = true;
 
     public Event() {
     }
@@ -35,7 +35,7 @@ public class Event {
             LocalDateTime startDateTime,
             LocalDateTime endDateTime,
             int priority,
-            Boolean isVisible) {
+            Boolean isPublic) {
         this.id = id;
         this.email = email;
         this.title = title;
@@ -43,7 +43,7 @@ public class Event {
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.priority = priority;
-        this.isVisible = isVisible;
+        this.isPublic = isPublic;
     }
 
     public long getId() {
@@ -74,8 +74,8 @@ public class Event {
         return this.priority;
     }
 
-    public Boolean getIsVisible() {
-        return this.isVisible;
+    public Boolean getIsPublic() {
+        return this.isPublic;
     }
 
     public void setId(long id) {
@@ -106,8 +106,8 @@ public class Event {
         this.priority = priority;
     }
 
-    public void setIsVisible(Boolean isVisible) {
-        this.isVisible = isVisible;
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     @Override
@@ -126,7 +126,7 @@ public class Event {
                 && Objects.equals(this.startDateTime, event.startDateTime)
                 && Objects.equals(this.endDateTime, event.endDateTime)
                 && Objects.equals(this.priority, priority)
-                && Objects.equals(this.isVisible, isVisible);
+                && Objects.equals(this.isPublic, isPublic);
 
     }
 
@@ -141,6 +141,6 @@ public class Event {
         return "event{" + "id=" + this.id + ", email='" + this.email + '\'' + ", title='" + this.title + '\''
                 + ", description='" + this.description + '\'' +
                 ", startDateTime='" + this.startDateTime + ", endDateTime='" + this.endDateTime + ", priority='"
-                + this.priority + ", isVisible='" + this.isVisible + '}';
+                + this.priority + ", isVisible='" + this.isPublic + '}';
     }
 }

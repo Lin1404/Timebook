@@ -36,10 +36,6 @@ public class EventService {
         return eventRepository.save(requestEvent);
     }
 
-    public void delete(long id) {
-        eventRepository.deleteById(id);
-    }
-
     private boolean isEventValid(Event event) {
         if (event.getStartDateTime() == null ||
             event.getEndDateTime() == null  ||
@@ -48,6 +44,10 @@ public class EventService {
             return false;
         }
         return true;
+    }
+
+    public void delete(long id) {
+        eventRepository.deleteById(id);
     }
 
     private String getStartDatetimeStr(String date) {
