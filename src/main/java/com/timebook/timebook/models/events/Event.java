@@ -134,6 +134,6 @@ public class Event {
         return "event{" + "id=" + this.id + ", email='" + this.email + '\'' + ", title='" + this.title + '\''
                 + ", description='" + this.description + '\'' +
                 ", startDateTime='" + this.startDateTime + ", endDateTime='" + this.endDateTime + ", priority='"
-                + this.priority + ", isVisible='" + this.isPublic + '}';
+                + this.priority + ", isPublic='" + this.isPublic + '}';
     }
 }
