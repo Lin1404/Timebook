@@ -4,6 +4,8 @@ import com.timebook.timebook.models.events.Event;
 import com.timebook.timebook.models.events.EventRepository;
 import com.timebook.timebook.models.users.User;
 
+import jakarta.validation.ValidationException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -27,8 +29,21 @@ public class EventService {
         this.userService = userService;
     }
 
-    public Event save(Event requestEvent) {
+    public Event save(Event requestEvent) throws ValidationException {
+        if (!this.isEventValid(requestEvent)) {
+            throw new ValidationException("Event validation failed.");
+        }
         return eventRepository.save(requestEvent);
+    }
+
+    private boolean isEventValid(Event event) {
+        if (event.getStartDateTime() == null ||
+            event.getEndDateTime() == null  ||
+            event.getStartDateTime().isAfter(event.getEndDateTime())
+        ) {
+            return false;
+        }
+        return true;
     }
 
     public void delete(long id) {

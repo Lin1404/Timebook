@@ -22,6 +22,7 @@ public class Event {
     @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private LocalDateTime endDateTime;
     private int priority;
+    private Boolean isPublic = true;
 
     public Event() {
     }
@@ -33,7 +34,8 @@ public class Event {
             String description,
             LocalDateTime startDateTime,
             LocalDateTime endDateTime,
-            int priority) {
+            int priority,
+            Boolean isPublic) {
         this.id = id;
         this.email = email;
         this.title = title;
@@ -41,6 +43,7 @@ public class Event {
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.priority = priority;
+        this.isPublic = isPublic;
     }
 
     public long getId() {
@@ -71,6 +74,10 @@ public class Event {
         return this.priority;
     }
 
+    public Boolean getIsPublic() {
+        return this.isPublic;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -99,6 +106,10 @@ public class Event {
         this.priority = priority;
     }
 
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -108,13 +119,7 @@ public class Event {
             return false;
 
         Event event = (Event) o;
-        return Objects.equals(this.id, event.id)
-                && Objects.equals(this.email, event.email)
-                && Objects.equals(this.title, event.title)
-                && Objects.equals(this.description, event.description)
-                && Objects.equals(this.startDateTime, event.startDateTime)
-                && Objects.equals(this.endDateTime, event.endDateTime)
-                && Objects.equals(this.priority, priority);
+        return Objects.equals(this.id, event.id) && Objects.equals(this.email, event.email);
 
     }
 
@@ -129,6 +134,6 @@ public class Event {
         return "event{" + "id=" + this.id + ", email='" + this.email + '\'' + ", title='" + this.title + '\''
                 + ", description='" + this.description + '\'' +
                 ", startDateTime='" + this.startDateTime + ", endDateTime='" + this.endDateTime + ", priority='"
-                + this.priority + '}';
+                + this.priority + ", isPublic='" + this.isPublic + '}';
     }
 }
