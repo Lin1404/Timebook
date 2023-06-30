@@ -119,14 +119,7 @@ public class Event {
             return false;
 
         Event event = (Event) o;
-        return Objects.equals(this.id, event.id)
-                && Objects.equals(this.email, event.email)
-                && Objects.equals(this.title, event.title)
-                && Objects.equals(this.description, event.description)
-                && Objects.equals(this.startDateTime, event.startDateTime)
-                && Objects.equals(this.endDateTime, event.endDateTime)
-                && Objects.equals(this.priority, priority)
-                && Objects.equals(this.isPublic, isPublic);
+        return Objects.equals(this.id, event.id) && Objects.equals(this.email, event.email);
 
     }
 
