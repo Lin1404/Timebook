@@ -70,10 +70,6 @@ public class User implements Serializable {
         return this.metadata;
     }
 
-    public void setUserId(long id) {
-        this.id = id;
-    }
-
     public void setCognitoId(String cognitoId) {
         this.cognitoId = cognitoId;
     }
