@@ -54,8 +54,10 @@ public class EventService {
 
         List<String> allEmails = new ArrayList<>();
         allEmails.add(userEmail);
-        allEmails.addAll(user.getSubscriptions().stream().map(User::getEmail)
-                .collect(Collectors.toList()));
+        if (user.getSubscriptions() != null) {
+            allEmails.addAll(user.getSubscriptions().stream().map(User::getEmail)
+                    .collect(Collectors.toList()));
+        }
 
         String startDateTimeStr = this.getStartDatetimeStr(date);
         List<Event> allEvents = allEmails.parallelStream().map(email -> {
