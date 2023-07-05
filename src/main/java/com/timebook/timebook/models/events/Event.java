@@ -17,9 +17,9 @@ public class Event {
     private String email;
     private String title;
     private String description;
-    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime startDateTime;
-    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime endDateTime;
     private int priority;
 
