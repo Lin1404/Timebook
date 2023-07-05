@@ -9,6 +9,10 @@ import net.minidev.json.JSONObject;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -95,5 +99,14 @@ public class UserService {
     public String getUser(String userEmail) {
         User user = userRepository.findByEmail(userEmail);
         return user.toString();
+    }
+
+    public List<String> getEmailsContainsString(String string) {
+
+        List<String> results = new ArrayList<String>();
+        this.userRepository.findByEmailContains(string).forEach(user -> {
+            results.add(user.getEmail());
+        });
+        return results;
     }
 }
