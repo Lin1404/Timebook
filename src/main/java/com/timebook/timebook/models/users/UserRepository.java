@@ -9,5 +9,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     public User findByEmail(String email);
 
-    public List<User> findByEmailContains(String string);
+    public List<User> findFirst5ByEmailContains(String string);
 }

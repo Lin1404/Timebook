@@ -102,8 +102,13 @@ public class UserService {
         return user.toString();
     }
 
-    public List<String> searchEmailsContainsString(String string) {
-        return this.userRepository.findByEmailContains(string).stream().map(User::getEmail)
+    public List<JSONObject> searchEmailsContainsString(String string) {
+
+        return this.userRepository.findFirst5ByEmailContains(string).stream().map(user -> {
+            JSONObject email = new JSONObject();
+            email.put("email", user.getEmail());
+            return email;
+        })
                 .collect(Collectors.toList());
     }
 }

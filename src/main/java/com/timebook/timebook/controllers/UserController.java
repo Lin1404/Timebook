@@ -65,7 +65,7 @@ public class UserController {
     }
 
     @PostMapping(value = "v1/searchEmails")
-    public List<String> searchEmails(@RequestBody JSONObject payload, Authentication authentication) {
+    public List<JSONObject> searchEmails(@RequestBody JSONObject payload, Authentication authentication) {
         String userInput = (String) payload.get("userInput");
         return userService.searchEmailsContainsString(userInput);
 
