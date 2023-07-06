@@ -5,6 +5,8 @@ import com.timebook.timebook.service.UserService;
 
 import net.minidev.json.JSONObject;
 
+import java.util.List;
+
 import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -60,5 +62,12 @@ public class UserController {
     public String getUser(Authentication authentication) {
         UserData userInfo = (UserData) authentication.getPrincipal();
         return userService.getUser(userInfo.getEmail());
+    }
+
+    @PostMapping(value = "v1/searchEmails")
+    public List<JSONObject> searchEmails(@RequestBody JSONObject payload, Authentication authentication) {
+        String userInput = (String) payload.get("userInput");
+        return userService.searchEmailsContainsString(userInput);
+
     }
 }
