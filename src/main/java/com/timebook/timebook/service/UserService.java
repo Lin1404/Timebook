@@ -101,7 +101,7 @@ public class UserService {
         return user.toString();
     }
 
-    public List<String> getEmailsContainsString(String string) {
+    public List<String> searchEmailsContainsString(String string) {
 
         List<String> results = new ArrayList<String>();
         this.userRepository.findByEmailContains(string).forEach(user -> {

@@ -64,10 +64,10 @@ public class UserController {
         return userService.getUser(userInfo.getEmail());
     }
 
-    @GetMapping(value = "v1/getEmailList")
-    public List<String> getEmailList(@RequestBody JSONObject payload, Authentication authentication) {
+    @PostMapping(value = "v1/searchEmails")
+    public List<String> searchEmails(@RequestBody JSONObject payload, Authentication authentication) {
         String userInput = (String) payload.get("userInput");
-        return userService.getEmailsContainsString(userInput);
+        return userService.searchEmailsContainsString(userInput);
 
     }
 }
