@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -102,11 +103,7 @@ public class UserService {
     }
 
     public List<String> searchEmailsContainsString(String string) {
-
-        List<String> results = new ArrayList<String>();
-        this.userRepository.findByEmailContains(string).forEach(user -> {
-            results.add(user.getEmail());
-        });
-        return results;
+        return this.userRepository.findByEmailContains(string).stream().map(User::getEmail)
+                .collect(Collectors.toList());
     }
 }
