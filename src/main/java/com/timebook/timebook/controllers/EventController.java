@@ -50,9 +50,13 @@ public class EventController {
 
     // Deleting an event
     @DeleteMapping("v1/events/{id}")
-    public long deleteEvent(@PathVariable long id) {
-        eventService.delete(id);
-        return id;
+    public ResponseEntity<?> deleteEvent(@PathVariable long id, Authentication authentication) {
+        UserData user = (UserData) authentication.getPrincipal();
+        if (eventService.isMatchedOwner(id, user.getEmail())) {
+            eventService.delete(id);
+            return ResponseEntity.ok(id);
+        }
+        return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).body("event does not belong to you.");
     }
 
     // Get weekly events by user's email
