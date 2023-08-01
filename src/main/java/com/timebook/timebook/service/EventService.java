@@ -9,6 +9,7 @@ import jakarta.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -38,9 +39,8 @@ public class EventService {
 
     private boolean isEventValid(Event event) {
         if (event.getStartDateTime() == null ||
-            event.getEndDateTime() == null  ||
-            event.getStartDateTime().isAfter(event.getEndDateTime())
-        ) {
+                event.getEndDateTime() == null ||
+                event.getStartDateTime().isAfter(event.getEndDateTime())) {
             return false;
         }
         return true;
@@ -82,5 +82,13 @@ public class EventService {
         }).flatMap(List::stream).collect(Collectors.toList());
 
         return allEvents;
+    }
+
+    public boolean isMatchedOwner(long eventId, String ownerEmail) {
+        Optional<Event> event = eventRepository.findById(eventId);
+        if (!event.isPresent()) {
+            return false;
+        }
+        return event.get().getEmail().equals(ownerEmail);
     }
 }

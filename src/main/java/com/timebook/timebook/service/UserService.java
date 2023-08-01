@@ -9,6 +9,10 @@ import net.minidev.json.JSONObject;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -95,5 +99,15 @@ public class UserService {
     public String getUser(String userEmail) {
         User user = userRepository.findByEmail(userEmail);
         return user.toString();
+    }
+
+    public List<JSONObject> searchEmailsContainsString(String string) {
+
+        return this.userRepository.findFirst5ByEmailContains(string).stream().map(user -> {
+            JSONObject email = new JSONObject();
+            email.put("email", user.getEmail());
+            return email;
+        })
+                .collect(Collectors.toList());
     }
 }
